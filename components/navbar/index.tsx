@@ -93,15 +93,8 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 112, cursor: 'pointer' }}>
-              {theme == 'dark' ? (
-                <img src="/reservoirMarketLogo.svg" style={{ width: '100%' }} />
-              ) : (
-                <img
-                  src="/reservoirMarketLogoLight.svg"
-                  style={{ width: '100%' }}
-                />
-              )}
+            <Box css={{ width: 35, cursor: 'pointer' }}>
+              <img src="/marketLogo.png" style={{ width: '100%' }} />
             </Box>
           </Link>
           <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
