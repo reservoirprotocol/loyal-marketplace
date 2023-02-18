@@ -1,5 +1,5 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import { Text, Flex, Box, Button } from 'components/primitives'
+import { Text, Flex, Box, Button, Anchor } from 'components/primitives'
 import Layout from 'components/Layout'
 import { ComponentPropsWithoutRef, useContext, useState } from 'react'
 import { Footer } from 'components/home/Footer'
@@ -79,21 +79,30 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        {isDisconnected && (
-          <Flex
-            direction="column"
-            align="center"
-            css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
-          >
-            <Text style="h3" css={{ mb: 24 }}>
-              100% Royalty Honoring Marketplace
-            </Text>
-            <Text style="body1" css={{ mb: 48 }}>
-              Loyalty.trade is an open-source marketplace that honors 100%
-              royalties.
-            </Text>
-          </Flex>
-        )}
+        <Flex
+          direction="column"
+          align="center"
+          css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
+        >
+          <Text style="h3" css={{ mb: 20 }}>
+            Honor royalties on every trade
+          </Text>
+          <Text style="body1" css={{ mb: 48 }}>
+            Orders are{' '}
+            <Anchor
+              color="primary"
+              href="https://docs.reservoir.tools/docs/normalized-royalties"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              fixed
+            </Anchor>{' '}
+            so full creator royalties are paid every time
+          </Text>
+          <a href="https://reservoir.tools" target="_blank">
+            <Button color="gray3">Powered by Reservoir</Button>
+          </a>
+        </Flex>
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <Flex
             justify="between"
