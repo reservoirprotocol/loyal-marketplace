@@ -109,7 +109,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             so full creator royalties are paid every time
           </Text>
           <a href="https://reservoir.tools" target="_blank">
-            <Button color="gray3">Powered by Reservoir</Button>
+            <Button color="gray3">
+              <img src="/marketLogo.png" style={{ width: 20 }} />
+              Powered by Reservoir
+            </Button>
           </a>
         </Flex>
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
