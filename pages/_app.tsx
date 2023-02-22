@@ -165,7 +165,7 @@ function MyApp({
                 default: marketplaceChain.id === id,
               }
             }),
-            source: source,
+            source: 'loyal.trade',
             normalizeRoyalties: NORMALIZE_ROYALTIES,
           }}
           theme={reservoirKitTheme}
