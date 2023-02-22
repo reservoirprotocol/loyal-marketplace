@@ -14,8 +14,7 @@ class MyDocument extends Document {
   }
 
   render() {
-    const description =
-      'Reservoir Market is an open source NFT marketplace built with Reservoir.'
+    const description = 'Honor royalties on every trade.'
     const ogImage = 'https://marketplace.reservoir.tools/og-image.png'
     return (
       <Html>
@@ -34,8 +33,7 @@ class MyDocument extends Document {
           type="image/svg"
           href="https://marketplace.reservoir.tools/reservoir.svg"
         />
-        {/* CONFIGURABLE: You'll probably want to configure this all to have custom meta tags and title to fit your application */}
-        <title>Reservoir Market | Open Source NFT Marketplace</title>
+        <title>loyal.trade | Honor royalties on every trade</title>
         <meta name="description" content={description} />
         <meta name="keywords" content="NFT, API, Protocol" />
         {/* Twitter */}
@@ -44,7 +42,7 @@ class MyDocument extends Document {
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Reservoir Market | Open Source NFT Marketplace"
+          content="loyal.trade | Honor royalties on every trade"
         />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:site" content="@reservoir0x" />
@@ -52,7 +50,7 @@ class MyDocument extends Document {
         {/* OG Tags - https://ogp.me/ */}
         <meta
           name="og:title"
-          content="Reservoir Market | Open Source NFT Marketplace"
+          content="loyal.trade | Honor royalties on every trade"
         />
         <meta property="og:type" content="website" />
         <meta property="og:determiner" content="the" />
@@ -63,7 +61,7 @@ class MyDocument extends Document {
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="Reservoir Market Banner" />
+        <meta property="og:image:alt" content="Banner" />
 
         {/* CONFIGURABLE: Reservoir meta tags can be configured to your application, learn more here: https://docs.reservoir.tools/docs/reservoir-meta-tags */}
         <meta property="reservoir:title" content="Reservoir Market" />
