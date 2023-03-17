@@ -81,6 +81,7 @@ const List: FC<Props> = ({
       <ListModal
         trigger={trigger}
         collectionId={contract}
+        oracleEnabled={true}
         tokenId={tokenId}
         currencies={listingCurrencies}
         onClose={(data, stepData, currentStep) => {
