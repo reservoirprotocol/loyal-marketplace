@@ -73,6 +73,7 @@ const Bid: FC<Props> = ({
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == BidStep.Complete) mutate()
         }}
+        oracleEnabled={true}
         onBidError={(error) => {
           if (error) {
             if (

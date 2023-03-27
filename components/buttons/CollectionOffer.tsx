@@ -102,6 +102,7 @@ const CollectionOffer: FC<Props> = ({
               </Button>
             }
             attribute={attribute}
+            oracleEnabled={true}
             onClose={(data, stepData, currentStep) => {
               if (mutate && currentStep == BidStep.Complete) mutate()
             }}
