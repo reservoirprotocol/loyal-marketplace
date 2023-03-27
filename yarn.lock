@@ -1989,7 +1989,7 @@
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
 
-"@reservoir0x/reservoir-kit-ui@^0.13.0":
+"@reservoir0x/reservoir-kit-ui@^0.13.2":
   version "0.13.2"
   resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.13.2.tgz#2ad062ef38f00f4b1efd1622fb25b2d2b12e574d"
   integrity sha512-4Skaw+34QWzg/mTx5Tlmm+55Kw2qSv3PqIUmDkbXgCgZ4bav6vnK5CcN0sWI2TRSPdsyWe5HaH5DrhXSMBHLCw==

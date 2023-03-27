@@ -38,6 +38,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
   let listingsQuery: Parameters<typeof useListings>['0'] = {
     maker: address,
     includeCriteriaMetadata: true,
+    includeRawData: true,
   }
 
   if (COMMUNITY) listingsQuery.community = COMMUNITY

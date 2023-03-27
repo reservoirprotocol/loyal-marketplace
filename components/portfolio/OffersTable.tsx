@@ -38,6 +38,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
   let bidsQuery: Parameters<typeof useBids>['0'] = {
     maker: address,
     includeCriteriaMetadata: true,
+    includeRawData: true,
   }
 
   if (COMMUNITY) bidsQuery.community = COMMUNITY
