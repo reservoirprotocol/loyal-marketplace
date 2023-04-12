@@ -183,7 +183,13 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               Net Floor
             </Text>
             <FormatCryptoCurrency
-              amount={token?.token?.collection?.floorAskPrice}
+              amount={token?.token?.collection?.floorAskPrice?.amount?.decimal}
+              address={
+                token?.token?.collection?.floorAskPrice?.currency?.contract
+              }
+              decimals={
+                token?.token?.collection?.floorAskPrice?.currency?.decimals
+              }
               textStyle="subtitle2"
               logoHeight={14}
             />
@@ -317,7 +323,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={token?.token?.collection?.floorAskPrice}
+          amount={token?.token?.collection?.floorAskPrice?.amount?.decimal}
+          address={token?.token?.collection?.floorAskPrice?.currency?.contract}
+          decimals={token?.token?.collection?.floorAskPrice?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
         />
