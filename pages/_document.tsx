@@ -14,11 +14,6 @@ class MyDocument extends Document {
   }
 
   render() {
-<<<<<<< HEAD
-    const description = 'Honor royalties on every trade.'
-    const ogImage = 'https://marketplace.reservoir.tools/og-image.png'
-=======
->>>>>>> cbc5e79e05c889436defb66646a65c4210215611
     return (
       <Html>
         <Head>
