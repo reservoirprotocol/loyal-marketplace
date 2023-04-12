@@ -16,6 +16,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAccount, useBalance, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
@@ -122,7 +123,7 @@ const HamburgerMenu = () => {
                 </Flex>
               </Flex>
             </Link>
-            <Link href="/" legacyBehavior>
+            <Link href="/collection-rankings" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -132,7 +133,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Explore
+                Collections
               </Text>
             </Link>
             <Link href="/portfolio" legacyBehavior>

@@ -10,7 +10,7 @@ import Layout from 'components/Layout'
 import fetcher, { basicFetcher } from 'utils/fetcher'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -35,9 +35,12 @@ import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { DefaultChain } from 'utils/chains'
 import { useENSResolver } from 'hooks'
-import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
-import Head from 'next/head'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
+import { Head } from 'components/Head'
 import CopyText from 'components/common/CopyText'
+import { Address, useAccount } from 'wagmi'
+import ChainToggle from 'components/common/ChainToggle'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -57,6 +60,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     shortAddress,
   } = useENSResolver(address)
   ensName = resolvedEnsName ? resolvedEnsName : ensName
+  const account = useAccount()
+
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
@@ -89,12 +94,14 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     limit: 100,
   }
 
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-    tokenQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
-    tokenQuery.community = COMMUNITY
+  const { chain } = useContext(ChainContext)
+
+  if (chain.collectionSetId) {
+    collectionQuery.collectionsSetId = chain.collectionSetId
+    tokenQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    collectionQuery.community = chain.community
+    tokenQuery.community = chain.community
   }
 
   const ssrTokens = ssr.tokens[marketplaceChain.id]
@@ -115,16 +122,17 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     ? [ssr.collections[marketplaceChain.id]]
     : undefined
 
-  const { data: collections } = useUserCollections(address, collectionQuery, {
-    fallbackData: filterCollection ? undefined : ssrCollections,
-  })
+  const { data: collections, isLoading: collectionsLoading } =
+    useUserCollections(address, collectionQuery, {
+      fallbackData: filterCollection ? undefined : ssrCollections,
+    })
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting])
 
   if (!isMounted) {
     return null
@@ -132,9 +140,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
 
   return (
     <Layout>
-      <Head>
-        <title>{`Profile - ${address}`}</title>
-      </Head>
+      <Head title={`Profile - ${address}`} />
       <Flex
         direction="column"
         css={{
@@ -146,28 +152,39 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
           },
         }}
       >
-        <Flex align="center">
-          {ensAvatar ? (
-            <Avatar size="xxl" src={ensAvatar} />
-          ) : (
-            <Jazzicon
-              diameter={64}
-              seed={jsNumberForAddress(address as string)}
-            />
-          )}
-          <Flex direction="column" css={{ ml: '$4' }}>
-            <Text style="h5">{ensName ? ensName : shortAddress}</Text>
-            <CopyText text={address as string}>
-              <Flex align="center" css={{ cursor: 'pointer' }}>
-                <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
-                  {shortAddress}
-                </Text>
-                <Box css={{ color: '$gray10' }}>
-                  <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                </Box>
-              </Flex>
-            </CopyText>
+        <Flex
+          justify="between"
+          css={{
+            gap: '$4',
+            flexDirection: 'column',
+            alignItems: 'start',
+            '@sm': { flexDirection: 'row', alignItems: 'center' },
+          }}
+        >
+          <Flex align="center">
+            {ensAvatar ? (
+              <Avatar size="xxl" src={ensAvatar} />
+            ) : (
+              <Jazzicon
+                diameter={64}
+                seed={jsNumberForAddress(address as string)}
+              />
+            )}
+            <Flex direction="column" css={{ ml: '$4' }}>
+              <Text style="h5">{ensName ? ensName : shortAddress}</Text>
+              <CopyText text={address as string}>
+                <Flex align="center" css={{ cursor: 'pointer' }}>
+                  <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
+                    {shortAddress}
+                  </Text>
+                  <Box css={{ color: '$gray10' }}>
+                    <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                  </Box>
+                </Flex>
+              </CopyText>
+            </Flex>
           </Flex>
+          <ChainToggle />
         </Flex>
         <Tabs.Root defaultValue="items">
           <TabsList>
@@ -191,6 +208,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 />
               ) : (
                 <TokenFilters
+                  isLoading={collectionsLoading}
                   open={tokenFiltersOpen}
                   setOpen={setTokenFiltersOpen}
                   collections={collections}
@@ -205,12 +223,15 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 }}
               >
                 <Flex justify="between" css={{ marginBottom: '$4' }}>
-                  {collections && collections.length > 0 && !isSmallDevice && (
-                    <FilterButton
-                      open={tokenFiltersOpen}
-                      setOpen={setTokenFiltersOpen}
-                    />
-                  )}
+                  {!collectionsLoading &&
+                    collections &&
+                    collections.length > 0 &&
+                    !isSmallDevice && (
+                      <FilterButton
+                        open={tokenFiltersOpen}
+                        setOpen={setTokenFiltersOpen}
+                      />
+                    )}
                 </Flex>
                 <Grid
                   css={{
@@ -225,24 +246,37 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     },
                   }}
                 >
-                  {isFetchingInitialData
+                  {isFetchingInitialData || collectionsLoading
                     ? Array(10)
                         .fill(null)
                         .map((_, index) => (
                           <LoadingCard key={`loading-card-${index}`} />
                         ))
                     : tokens.map((token, i) => {
-                        if (token)
+                        if (token) {
+                          let dynamicToken = token as ReturnType<
+                            typeof useDynamicTokens
+                          >['data'][0]
+
+                          if (dynamicToken.token) {
+                            dynamicToken.token.owner = address
+                          }
+                          dynamicToken.market = {
+                            floorAsk: token?.ownership?.floorAsk,
+                          }
                           return (
                             <TokenCard
                               key={i}
-                              token={
-                                token as ReturnType<
-                                  typeof useDynamicTokens
-                                >['data'][0]
+                              token={dynamicToken}
+                              address={account.address as Address}
+                              tokenCount={
+                                token?.token?.kind === 'erc1155'
+                                  ? token.ownership?.tokenCount
+                                  : undefined
                               }
                               mutate={mutate}
                               rarityEnabled={false}
+                              addToCartEnabled={false}
                               onMediaPlayed={(e) => {
                                 if (
                                   playingElement &&
@@ -259,19 +293,26 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                               }}
                             />
                           )
+                        }
                       })}
-                  <Box ref={loadMoreRef}>
+                  <Box
+                    ref={loadMoreRef}
+                    css={{
+                      display: isFetchingPage ? 'none' : 'block',
+                    }}
+                  >
                     {hasNextPage && !isFetchingInitialData && <LoadingCard />}
                   </Box>
-                  {hasNextPage && (
-                    <>
-                      {Array(10)
-                        .fill(null)
-                        .map((_, index) => (
-                          <LoadingCard key={`loading-card-${index}`} />
-                        ))}
-                    </>
-                  )}
+                  {(hasNextPage || isFetchingPage) &&
+                    !isFetchingInitialData && (
+                      <>
+                        {Array(6)
+                          .fill(null)
+                          .map((_, index) => (
+                            <LoadingCard key={`loading-card-${index}`} />
+                          ))}
+                      </>
+                    )}
                 </Grid>
                 {tokens.length === 0 && !isFetchingPage && (
                   <Flex
@@ -384,12 +425,12 @@ export const getStaticProps: GetStaticProps<{
       limit: 100,
     }
 
-  if (COLLECTION_SET_ID) {
-    tokensQuery.collectionsSetId = COLLECTION_SET_ID
-    collectionsQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    tokensQuery.community = COMMUNITY
-    collectionsQuery.community = COMMUNITY
+  if (DefaultChain.collectionSetId) {
+    tokensQuery.collectionsSetId = DefaultChain.collectionSetId
+    collectionsQuery.collectionsSetId = DefaultChain.collectionSetId
+  } else if (DefaultChain.community) {
+    tokensQuery.community = DefaultChain.community
+    collectionsQuery.community = DefaultChain.community
   }
 
   const promises: ReturnType<typeof fetcher>[] = []
