@@ -100,6 +100,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
     includeQuantity: true,
+    includeLastSale: true,
   }
 
   const sortDirection = router.query['sortDirection']?.toString()
@@ -537,7 +538,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<{
   ssr: {
     collection?: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens?: paths['/tokens/v5']['get']['responses']['200']['schema']
+    tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
     hasAttributes: boolean
   }
   id: string | undefined
@@ -565,7 +566,7 @@ export const getStaticProps: GetStaticProps<{
     headers
   )
 
-  let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
+  let tokensQuery: paths['/tokens/v6']['get']['parameters']['query'] = {
     collection: id,
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
@@ -574,10 +575,11 @@ export const getStaticProps: GetStaticProps<{
     includeDynamicPricing: true,
     includeAttributes: true,
     includeQuantity: true,
+    includeLastSale: true,
   }
 
   const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v5`,
+    `${reservoirBaseUrl}/tokens/v6`,
     tokensQuery,
     headers
   )

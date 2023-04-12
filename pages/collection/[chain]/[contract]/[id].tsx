@@ -576,7 +576,7 @@ export const getStaticProps: GetStaticProps<{
   collectionId?: string
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
+    tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
   }
 }> = async ({ params }) => {
   let collectionId = params?.contract?.toString()
@@ -606,7 +606,7 @@ export const getStaticProps: GetStaticProps<{
     headers
   )
 
-  let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
+  let tokensQuery: paths['/tokens/v6']['get']['parameters']['query'] = {
     tokens: [`${contract}:${id}`],
     includeAttributes: true,
     includeTopBid: true,
@@ -615,7 +615,7 @@ export const getStaticProps: GetStaticProps<{
   }
 
   const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v5`,
+    `${reservoirBaseUrl}/tokens/v6`,
     tokensQuery,
     headers
   )
